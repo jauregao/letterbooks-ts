@@ -1,48 +1,54 @@
 import { Request, Response } from 'express'
 import { user } from '../models/user.model'
+import { User } from '../types'
 
-// export const getUserLogged = async (req: Request, res: Response) => {
+interface CustomRequest extends Request {
+  usuario?: User
+}
 
-//   const { id } = req;
-//   try {
-//     user.getUser(Number(id))
+export const getUserLogged = async (req: CustomRequest, res: Response) => {
 
-//     if (!user) {
-//       return res.status(404).json({ mensagem: 'Usuario não encontrado.' })
-//     }
+  const usuario = req.usuario
 
-//     return res.json(user)
+  if (!usuario) {
+    return res.status(401).json({ mensagem: 'Usuário não autenticado.' });
+  }
 
-//   } catch (error) {
-//     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
-//   }
-// }
-
-export const newUser = async (req: Request, res: Response): Promise<Object> => {
-  let { nome, email, senha, idade, livros_lidos } = req.body
+  const { id } = usuario
 
   try {
 
-    await user.createUser({ nome, email, senha, idade, livros_lidos })
+    const usuario = await user.getUser(Number(id))
 
-    const novoUsuario = {
-      usuario: {
-        nome,
-        email,
-        idade,
-        livros_lidos
-      }
+    if (!usuario) {
+      return res.status(404).json({ mensagem: 'Usuario não encontrado.' })
     }
-    return novoUsuario
+
+    return res.json({
+      id: usuario.id,
+      email: usuario.email,
+      nome: usuario.nome,
+      idade: usuario.idade,
+      livros_lidos: usuario.livros_lidos
+    })
 
   } catch (error) {
-    console.log(error);
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
 }
 
-export const login = async (req: Request, res: Response) => {
-  return 1
+export const newUser = (req: Request, res: Response) => {
+  let { nome, email, senha, idade, livros_lidos } = req.body
+
+  try {
+
+    const novoUsuario = user.createUser({ nome, email, senha, idade, livros_lidos })
+
+    return novoUsuario
+
+  } catch (error) {
+    return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+  }
 }
 
 export const updateUser = async (req: Request, res: Response) => {

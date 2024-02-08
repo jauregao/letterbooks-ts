@@ -7,9 +7,10 @@ export const user = {
 
     const user = await knex<User>('usuarios')
       .where({ id })
+      .returning('*')
       .first()
 
-    return user ?? null
+    return user
   },
 
   updateUser: () => 1,
@@ -20,6 +21,7 @@ export const user = {
 
     await knex<Omit<User, 'id'>>('usuarios')
       .insert({ nome, email, senha: senhaNova, idade, livros_lidos })
+      .returning('*')
   },
 
   deleteUser: () => 1
