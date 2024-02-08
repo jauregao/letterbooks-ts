@@ -2,8 +2,11 @@ import express from 'express'
 
 import 'dotenv/config'
 
-const app = express()
+import userRoutes from './routes/user.routes'
 
+const app = express()
 app.use(express.json())
+
+app.use(userRoutes)
 
 app.listen(process.env.PORT)
