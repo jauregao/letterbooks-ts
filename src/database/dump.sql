@@ -2,7 +2,7 @@ CREATE DATABASE biblioteca_typescript;
 
 CREATE TABLE usuarios (
   id SERIAL PRIMARY KEY,
-  email TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
   senha TEXT NOT NULL,
   nome VARCHAR(255) NOT NULL,
   idade VARCHAR(3) NOT NULL,

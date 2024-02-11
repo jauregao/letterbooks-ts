@@ -38,8 +38,8 @@ const login = async (req: Request, res: Response) => {
   }
 }
 
-async function comparePasswords(candidatePassword: string, hashedPassword: string): Promise<boolean> {
-  return bcrypt.compare(candidatePassword, hashedPassword);
+async function comparePasswords(password: string, hashedPassword: string): Promise<boolean> {
+  return bcrypt.compare(password, hashedPassword);
 }
 
 function generateAuthToken(userId: string): string {

@@ -1,18 +1,32 @@
 import { Router } from 'express'
-import { getUserLogged, newUser, login, updateUser, deleteUser } from '../controllers/user.controllers';
+import {
+  getUserLogged,
+  newUser,
+  updateUser,
+  // deleteUser
+} from '../controllers/userControllers';
+import login from '../controllers/userLogin'
+import { verifyUserIsLogged } from '../middlewares/userAuth';
 
-const routes = Router()
 
-routes.get('/usuario',
-  getUserLogged)
-routes.post('/usuario',
-  newUser)
-routes.post('/login',
+const userRoutes = Router()
+
+userRoutes.post('/usuario', newUser)
+
+userRoutes.post('/login',
   login)
-routes.put('/usuario',
+
+userRoutes.get('/usuario',
+  verifyUserIsLogged,
+  getUserLogged)
+
+userRoutes.put('/usuario',
+  verifyUserIsLogged,
   updateUser)
-routes.delete('/usuario',
-  deleteUser)
+
+// userRoutes.delete('/usuario',
+//   deleteUser)
 
 
-export default routes
+
+export default userRoutes
