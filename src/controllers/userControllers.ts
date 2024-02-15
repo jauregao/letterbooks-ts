@@ -11,7 +11,7 @@ export const getUserLogged = async (req: CustomRequest, res: Response) => {
   const usuario = req.usuario
 
   if (!usuario) {
-    return res.status(401).json({ mensagem: 'Usuário não autenticado.' });
+    return res.status(401).json({ mensagem: 'Usuário não autenticado.' })
   }
 
   const { id } = usuario
@@ -57,7 +57,7 @@ export const updateUser = async (req: CustomRequest, res: Response) => {
   const usuario = req.usuario
 
   if (!usuario) {
-    return res.status(401).json({ mensagem: 'Usuário não autenticado.' });
+    return res.status(401).json({ mensagem: 'Usuário não autenticado.' })
   }
 
   const { id } = usuario
@@ -72,6 +72,16 @@ export const updateUser = async (req: CustomRequest, res: Response) => {
   }
 }
 
-export const deleteUser = async (req: Request, res: Response) => {
-  return 1
+export const deleteUser = async (req: CustomRequest, res: Response): Promise<string> => {
+
+  const { id } = req?.usuario
+
+  try {
+    await user.deleteUser(id)
+
+    return `Usuário excluído com sucesso`
+
+  } catch (error) {
+    return res.status(500).json({ mensagem: 'Erro interno do servidor' })
+  }
 }

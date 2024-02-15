@@ -65,5 +65,10 @@ export const user = {
       .returning('*')
   },
 
-  deleteUser: () => 1
+  deleteUser: async (id: number): Promise<void> => {
+
+    await knex<User>('usuarios')
+      .where({id})
+      .del()
+  }
 }
