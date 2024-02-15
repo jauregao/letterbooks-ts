@@ -3,7 +3,7 @@ import {
   getUserLogged,
   newUser,
   updateUser,
-  // deleteUser
+  deleteUser
 } from '../controllers/userControllers';
 import login from '../controllers/userLogin'
 import { verifyUserIsLogged } from '../middlewares/userAuth';
@@ -11,7 +11,8 @@ import { verifyUserIsLogged } from '../middlewares/userAuth';
 
 const userRoutes = Router()
 
-userRoutes.post('/usuario', newUser)
+userRoutes.post('/usuario',
+newUser)
 
 userRoutes.post('/login',
   login)
@@ -24,8 +25,9 @@ userRoutes.put('/usuario',
   verifyUserIsLogged,
   updateUser)
 
-// userRoutes.delete('/usuario',
-//   deleteUser)
+userRoutes.delete('/usuario',
+  verifyUserIsLogged,
+  deleteUser)
 
 
 

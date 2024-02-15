@@ -1,4 +1,4 @@
-import { knex } from '../connections/connections';
+import { knex } from '../connections/connections'
 import jwt, { Secret } from 'jsonwebtoken'
 import { NextFunction, Request, Response } from 'express'
 
@@ -11,29 +11,29 @@ const secretKey: Secret = process.env.JWT_SECRET_KEY ?? 'abcdef'
 
 export const verifyUserIsLogged = async (req: CustomRequest, res: Response, next: NextFunction) => {
 
-  const { authorization } = req.headers;
+  const { authorization } = req.headers
 
   if (!authorization) {
-    return res.status(401).json("Não autorizado");
+    return res.status(401).json("Não autorizado")
   }
 
   try {
-    const token: string = authorization.replace("Bearer ", "").trim();
+    const token: string = authorization.replace("Bearer ", "").trim()
 
-    const { id } = jwt.verify(token, secretKey) as { id: string };
+    const { id } = jwt.verify(token, secretKey) as { id: string }
 
-    const query = await knex("usuarios").where({ id }).first();
+    const query = await knex("usuarios").where({ id }).first()
 
     if (!query) {
-      return res.status(404).json("Usuario não encontrado");
+      return res.status(404).json("Usuario não encontrado")
     }
 
-    const { senha, ...usuario } = query;
+    const { senha, ...usuario } = query
 
-    req.usuario = usuario;
+    req.usuario = usuario
 
-    next();
+    next()
   } catch (error) {
-    return res.status(500).json({ mensagem: "Erro interno do servidor." });
+    return res.status(500).json({ mensagem: "Erro interno do servidor." })
   }
 }
