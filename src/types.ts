@@ -14,3 +14,8 @@ export type Book = {
   descricao?: string,
   usuario: number
 }
+
+export type OmittedUserId = Omit<User, 'id'>
+
+export type OmittedUserPass = Omit<User, 'senha'>
+

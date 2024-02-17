@@ -1,8 +1,6 @@
 import { knex } from '../connections/connections'
-import { User } from '../types'
+import { User, OmittedUserId, OmittedUserPass } from '../types'
 import bcrypt from 'bcrypt'
-
-type UserOmitPass = Omit<User, 'senha'>
 
 export const user = {
   getUser: async (id: number) => {
@@ -15,8 +13,8 @@ export const user = {
     return user
   },
 
-  updateUser: async (id: number, { nome, email, senha, idade, livros_lidos }: Omit<User, 'id'>): Promise<Object | UserOmitPass> => {
-    if (!nome && !email && !senha && !idade && !livros_lidos) {
+  updateUser: async (id: number, data: OmittedUserId): Promise<Object | OmittedUserPass> => {
+    if (!data) {
       return { message: 'Nenhum dado foi fornecido para atualização.' }
     }
 
@@ -28,21 +26,21 @@ export const user = {
       return { message: 'Usuário não encontrado.' }
     }
 
-    if (nome) {
-      user.nome = nome
+    if (user.nome) {
+      user.nome = data.nome
     }
-    if (email) {
-      user.email = email
+    if (user.email) {
+      user.email = data.email
     }
-    if (senha) {
-      const senhaNova = await bcrypt.hash(senha, 10)
+    if (user.senha) {
+      const senhaNova = await bcrypt.hash(data.senha, 10)
       user.senha = senhaNova
     }
-    if (idade) {
-      user.idade = idade
+    if (user.idade) {
+      user.idade = data.idade
     }
-    if (livros_lidos) {
-      user.livros_lidos = livros_lidos
+    if (user.livros_lidos) {
+      user.livros_lidos = data.livros_lidos
     }
 
     await knex<User>('usuarios')
@@ -56,19 +54,21 @@ export const user = {
 
   },
 
-  createUser: async ({ nome, email, senha, idade, livros_lidos }: Omit<User, 'id'>): Promise<void> => {
+  createUser: async (data: OmittedUserId): Promise<void> => {
 
-    const senhaNova = await bcrypt.hash(senha, 10)
+    const senhaNova = await bcrypt.hash(data.senha, 10)
 
-    await knex<Omit<User, 'id'>>('usuarios')
-      .insert({ nome, email, senha: senhaNova, idade, livros_lidos })
+    data.senha = senhaNova
+
+    await knex<OmittedUserId>('usuarios')
+      .insert(data)
       .returning('*')
   },
 
   deleteUser: async (id: number): Promise<void> => {
 
     await knex<User>('usuarios')
-      .where({id})
+      .where({ id })
       .del()
   }
 }
