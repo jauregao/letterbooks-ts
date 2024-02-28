@@ -7,7 +7,6 @@ interface CustomRequest extends Request {
 }
 
 export const getUserLogged = async (req: CustomRequest, res: Response) => {
-
   const usuario = req.usuario
 
   if (!usuario) {
@@ -28,22 +27,21 @@ export const getUserLogged = async (req: CustomRequest, res: Response) => {
       email: usuario.email,
       nome: usuario.nome,
       idade: usuario.idade,
-      livros_lidos: usuario.livros_lidos
+      livros_lidos: usuario.livros_lidos,
     })
-
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
 }
 
-export const newUser = async (req: Request, res: Response): Promise<unknown> => {
+export const newUser = async (
+  req: Request,
+  res: Response
+): Promise<unknown> => {
   const newUserPayload: OmittedUserId = req.body
 
   try {
-    const novoUsuario = await user.createUser(newUserPayload)
-
-    return novoUsuario
-
+    return await user.createUser(newUserPayload)
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
@@ -64,14 +62,15 @@ export const updateUser = async (req: CustomRequest, res: Response) => {
     const updatedUser = await user.updateUser(id, updateUserPayload)
 
     return res.status(200).json(updatedUser)
-
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
 }
 
-export const deleteUser = async (req: CustomRequest, res: Response): Promise<Object> => {
-
+export const deleteUser = async (
+  req: CustomRequest,
+  res: Response
+): Promise<Object> => {
   const usuario = req.usuario
 
   if (!usuario) {
@@ -84,7 +83,6 @@ export const deleteUser = async (req: CustomRequest, res: Response): Promise<Obj
     await user.deleteUser(id)
 
     return { message: `Usuário excluído com sucesso` }
-
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
