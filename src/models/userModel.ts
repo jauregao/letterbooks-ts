@@ -45,15 +45,17 @@ export const user = {
     return userData
   },
 
-  createUser: async (data: OmittedUserId): Promise<void> => {
+  createUser: async (data: OmittedUserId): Promise<Object> => {
     const senhaNova = await bcrypt.hash(data.senha, 10)
 
     data.senha = senhaNova
 
-    await knex<OmittedUserId>('usuarios').insert(data).returning('*')
+    return await knex<OmittedUserId>('usuarios').insert(data).returning('*')
   },
 
-  deleteUser: async (id: number): Promise<void> => {
+  deleteUser: async (id: number): Promise<Object> => {
     await knex<User>('usuarios').where({ id }).del()
+    
+    return { message: 'Conta excluído com sucesso.' }
   },
 }

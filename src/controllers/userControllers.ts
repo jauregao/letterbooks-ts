@@ -6,42 +6,39 @@ interface CustomRequest extends Request {
   usuario?: User
 }
 
+
+
+
+
+
 export const getUserLogged = async (req: CustomRequest, res: Response) => {
-  const usuario = req.usuario
-
-  if (!usuario) {
-    return res.status(401).json({ mensagem: 'Usuário não autenticado.' })
-  }
-
+  const usuario = req.usuario!
   const { id } = usuario
 
   try {
     const usuario = await user.getUser(Number(id))
 
-    if (!usuario) {
-      return res.status(404).json({ mensagem: 'Usuario não encontrado.' })
-    }
+    if (!usuario) return res.status(404).json({ mensagem: 'Usuario não encontrado.' })
 
     return res.json({
       id: usuario.id,
       email: usuario.email,
       nome: usuario.nome,
       idade: usuario.idade,
-      livros_lidos: usuario.livros_lidos,
+      livros_lidos: usuario.livros_lidos
     })
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
 }
 
-export const newUser = async (
-  req: Request,
-  res: Response
-): Promise<unknown> => {
+export const newUser = async ( req: Request, res: Response): Promise<User | Object> => {
+
   const newUserPayload: OmittedUserId = req.body
 
   try {
     return await user.createUser(newUserPayload)
+    
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
@@ -50,12 +47,7 @@ export const newUser = async (
 export const updateUser = async (req: CustomRequest, res: Response) => {
   const updateUserPayload: OmittedUserId = req.body
 
-  const usuario = req.usuario
-
-  if (!usuario) {
-    return res.status(401).json({ mensagem: 'Usuário não autenticado.' })
-  }
-
+  const usuario = req.usuario!
   const { id } = usuario
 
   try {
@@ -67,16 +59,9 @@ export const updateUser = async (req: CustomRequest, res: Response) => {
   }
 }
 
-export const deleteUser = async (
-  req: CustomRequest,
-  res: Response
-): Promise<Object> => {
-  const usuario = req.usuario
-
-  if (!usuario) {
-    return res.status(401).json({ mensagem: 'Usuário não autenticado.' })
-  }
-
+export const deleteUser = async ( req: CustomRequest, res: Response ): Promise<Object> => {
+  
+  const usuario = req.usuario!
   const { id } = usuario
 
   try {

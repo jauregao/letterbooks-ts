@@ -44,17 +44,17 @@ export const books = {
   },
   createBook: async (bookData: OmittedBookId): Promise<Object | Book> => {
     if (!bookData) {
-      return 'Nenhum dado foi informado.'
+      return { message: 'Nenhum dado foi informado.' }
     }
 
     return (await knex<Book>('livros')
       .insert(bookData)
       .returning('*')
       .first()) as Book
-  },
-  deleteBook: async (id: number) => {
+  }, 
+  deleteBook: async (id: number): Promise<Object> => {
     await knex<Book>('livros').where({ id }).del()
 
-    return 'Livro excluído com sucesso.'
+    return { message: 'Livro excluído com sucesso.' }
   },
 }
