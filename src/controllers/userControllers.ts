@@ -6,11 +6,6 @@ interface CustomRequest extends Request {
   usuario?: User
 }
 
-
-
-
-
-
 export const getUserLogged = async (req: CustomRequest, res: Response) => {
   const usuario = req.usuario!
   const { id } = usuario
@@ -23,9 +18,7 @@ export const getUserLogged = async (req: CustomRequest, res: Response) => {
     return res.json({
       id: usuario.id,
       email: usuario.email,
-      nome: usuario.nome,
-      idade: usuario.idade,
-      livros_lidos: usuario.livros_lidos
+      nome: usuario.nome
     })
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
@@ -37,8 +30,7 @@ export const newUser = async ( req: Request, res: Response): Promise<User | Obje
   const newUserPayload: OmittedUserId = req.body
 
   try {
-    return await user.createUser(newUserPayload)
-    
+    return res.status(201).json(await user.createUser(newUserPayload))
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }

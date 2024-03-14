@@ -4,15 +4,18 @@ CREATE TABLE usuarios (
   id SERIAL PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   senha TEXT NOT NULL,
-  nome VARCHAR(255) NOT NULL,
-  idade VARCHAR(3) NOT NULL,
-  livros_lidos INTEGER
+  nome VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE livros (
-  id SERIAL PRIMARY KEY,
+  isbn SERIAL PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
   nota INTEGER NOT NULL,
-  descricao TEXT,
-  usuario INTEGER REFERENCES usuarios (id)
+  descricao TEXT
+);
+
+CREATE TABLE livros_lidos (
+  id SERIAL PRIMARY KEY,
+  usuario REFERENCES usuarios(id)
+  isbn REFERENCES livros(isbn)
 );

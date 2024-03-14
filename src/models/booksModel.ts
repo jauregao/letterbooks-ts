@@ -3,15 +3,18 @@ import { knex } from '../connections/connections'
 import { Book } from '../types'
 
 export const books = {
+
   getAll: async (): Promise<Book[]> => {
     return (await knex<Book>('livros')) as Book[]
   },
+
   getOne: async (bookName: string): Promise<Book> => {
     return (await knex<Book>('livros')
       .where({ nome: bookName })
       .returning('*')
       .first()) as Book
   },
+
   updateBook: async (
     id: number,
     bookData: OmittedBookId
@@ -42,6 +45,7 @@ export const books = {
       .returning('*')
       .first()) as Book
   },
+
   createBook: async (bookData: OmittedBookId): Promise<Object | Book> => {
     if (!bookData) {
       return { message: 'Nenhum dado foi informado.' }
@@ -52,6 +56,7 @@ export const books = {
       .returning('*')
       .first()) as Book
   }, 
+  
   deleteBook: async (id: number): Promise<Object> => {
     await knex<Book>('livros').where({ id }).del()
 

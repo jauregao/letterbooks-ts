@@ -3,8 +3,6 @@ export type User = {
   nome: string
   email: string
   senha: string
-  idade?: number
-  livros_lidos: number
 }
 
 export type Book = {

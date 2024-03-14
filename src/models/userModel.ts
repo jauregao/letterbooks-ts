@@ -31,12 +31,6 @@ export const user = {
       const senhaNova = await bcrypt.hash(data.senha, 10)
       user.senha = senhaNova
     }
-    if (user.idade) {
-      user.idade = data.idade
-    }
-    if (user.livros_lidos) {
-      user.livros_lidos = data.livros_lidos
-    }
 
     await knex<User>('usuarios').where({ id }).update(user).returning('*')
 
