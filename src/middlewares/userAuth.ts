@@ -15,22 +15,18 @@ export const verifyUserIsLogged = async (
 ): Promise<void | Object> => {
   const { authorization } = req.headers
 
-  if (!authorization) {
-    return res.status(401).json({ message: 'Não autorizado' })
-  }
+  if (!authorization) return res.status(401).json({ message: 'Não autorizado' })
 
   try {
     const token: string = authorization.replace('Bearer ', '').trim()
 
     const { id } = jwt.verify(token, secretKey) as { id: string }
 
-    const { senha, ...usuario } = await knex('usuarios').where({ id }).first()
+    const { pass, ...loginUser} = await knex('users').where({ id }).first()
 
-    if (!usuario) {
-      return res.status(404).json({ message: 'Usuario não encontrado' })
-    }
+    if (!loginUser) return res.status(404).json({ message: 'Usuario não encontrado' })
 
-    req.usuario = usuario
+    req.usuario = loginUser
 
     next()
   } catch (error) {

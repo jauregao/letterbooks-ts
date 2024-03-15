@@ -3,14 +3,13 @@ import { knex } from '../connections/connections'
 import { Book } from '../types'
 
 export const books = {
-
   getAll: async (): Promise<Book[]> => {
     return (await knex<Book>('livros')) as Book[]
   },
 
   getOne: async (bookName: string): Promise<Book> => {
     return (await knex<Book>('livros')
-      .where({ nome: bookName })
+      .where({ title: bookName })
       .returning('*')
       .first()) as Book
   },
@@ -29,14 +28,14 @@ export const books = {
       return { message: 'Livro não encontrado.' }
     }
 
-    if (bookData.nome) {
-      book.nome = bookData.nome
+    if (bookData.title) {
+      book.title = bookData.title
     }
-    if (bookData.descricao) {
-      book.descricao = bookData.descricao
+    if (bookData.review) {
+      book.review = bookData.review
     }
-    if (bookData.nota) {
-      book.nota = bookData.nota
+    if (bookData.rating) {
+      book.rating = bookData.rating
     }
 
     return (await knex<Book>('livros')
@@ -55,8 +54,8 @@ export const books = {
       .insert(bookData)
       .returning('*')
       .first()) as Book
-  }, 
-  
+  },
+
   deleteBook: async (id: number): Promise<Object> => {
     await knex<Book>('livros').where({ id }).del()
 

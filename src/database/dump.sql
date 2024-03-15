@@ -1,21 +1,21 @@
-CREATE DATABASE biblioteca_typescript;
+CREATE DATABASE library_typescript;
 
-CREATE TABLE usuarios (
+CREATE TABLE users (
   id SERIAL PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
-  senha TEXT NOT NULL,
-  nome VARCHAR(255) NOT NULL
+  pass TEXT NOT NULL,
+  full_name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE livros (
+CREATE TABLE books (
   isbn SERIAL PRIMARY KEY,
-  nome VARCHAR(255) NOT NULL,
-  nota INTEGER NOT NULL,
-  descricao TEXT
+  title VARCHAR(255) NOT NULL,
+  rating INTEGER NOT NULL,
+  review VARCHAR(510)
 );
 
-CREATE TABLE livros_lidos (
+CREATE TABLE read_books (
   id SERIAL PRIMARY KEY,
-  usuario REFERENCES usuarios(id)
-  isbn REFERENCES livros(isbn)
+  user INTEGER REFERENCES user(id),
+  isbn INTEGER REFERENCES books(isbn)
 );

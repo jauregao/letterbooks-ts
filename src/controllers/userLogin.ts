@@ -7,30 +7,26 @@ const secretKey: Secret = process.env.JWT_SECRET_KEY!
 const expires = process.env.JWT_EXPIRED
 
 const login = async (req: Request, res: Response) => {
-  const { email, senha } = req.body
+  const { email, pass } = req.body
 
   try {
-    const usuario = await knex('usuarios')
+    const usuario = await knex('users')
       .where({ email })
       .returning('*')
       .first()
 
-    if (!usuario) {
-      return res.status(404).json({ message: 'Usuário e/ou senha inválido(s)' })
-    }
+    if (!usuario) return res.status(404).json({ message: 'Usuário e/ou senha inválido(s)' })
 
-    const senhaValida = await comparePasswords(senha, usuario.senha)
+    const validPass = await comparePasswords(pass, usuario.pass)
 
-    if (!senhaValida) {
-      return res.status(400).json({ message: 'Usuário e/ou senha inválido(s)' })
-    }
+    if (!validPass) return res.status(400).json({ message: 'Usuário e/ou senha inválido(s)' })
 
     const token = generateAuthToken(usuario.id)
 
     return res.json({
       usuario: {
         id: usuario.id,
-        nome: usuario.nome,
+        nome: usuario.full_name,
         email: usuario.email,
       },
       token: token,

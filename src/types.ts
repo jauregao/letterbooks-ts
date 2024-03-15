@@ -1,20 +1,25 @@
 export type User = {
   id: number
-  nome: string
+  full_name: string
   email: string
-  senha: string
+  pass: string
 }
 
 export type Book = {
   id: number
-  nome: string
-  nota: 1 | 2 | 3 | 4 | 5
-  descricao?: string
-  usuario: number
+  title: string
+  rating: 1 | 2 | 3 | 4 | 5
+  review?: string
+}
+
+export type ReadBooks = {
+  id: number
+  user: number
+  isbn: number
 }
 
 export type OmittedUserId = Omit<User, 'id'>
 
-export type OmittedUserPass = Omit<User, 'senha'>
+export type OmittedUserPass = Omit<User, 'pass'>
 
 export type OmittedBookId = Omit<Book, 'id'>
