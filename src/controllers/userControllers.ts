@@ -1,36 +1,37 @@
 import { Request, Response } from 'express'
 import { user } from '../models/userModel'
-import { User, OmittedUserId } from '../types'
+import { User, OmittedUserId, OmittedUserPass } from '../types'
 
 interface CustomRequest extends Request {
   usuario?: User
 }
 
-export const getUserLogged = async (req: CustomRequest, res: Response) => {
+export const getUserLogged = async (req: CustomRequest, res: Response): Promise<OmittedUserPass | Object> => {
   const usuario = req.usuario!
   const { id } = usuario
 
   try {
-    const usuario = await user.getUser(Number(id))
 
-    if (!usuario) return res.status(404).json({ mensagem: 'Usuario não encontrado.' })
+    const loggedUser = await user.getUser(id)
 
     return res.json({
-      id: usuario.id,
-      email: usuario.email,
-      nome: usuario.nome
+      id: loggedUser.id,
+      nome: loggedUser.full_name,
+      email: loggedUser.email
     })
+
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
 }
 
 export const newUser = async ( req: Request, res: Response): Promise<User | Object> => {
-
   const newUserPayload: OmittedUserId = req.body
 
   try {
+
     return res.status(201).json(await user.createUser(newUserPayload))
+
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
@@ -38,21 +39,19 @@ export const newUser = async ( req: Request, res: Response): Promise<User | Obje
 
 export const updateUser = async (req: CustomRequest, res: Response) => {
   const updateUserPayload: OmittedUserId = req.body
-
   const usuario = req.usuario!
   const { id } = usuario
 
   try {
-    const updatedUser = await user.updateUser(id, updateUserPayload)
 
-    return res.status(200).json(updatedUser)
+    return res.status(200).json(await user.updateUser(id, updateUserPayload))
+
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
 }
 
 export const deleteUser = async ( req: CustomRequest, res: Response ): Promise<Object> => {
-  
   const usuario = req.usuario!
   const { id } = usuario
 

@@ -3,53 +3,57 @@ import { User, OmittedUserId, OmittedUserPass } from '../types'
 import bcrypt from 'bcrypt'
 
 export const user = {
-  getUser: async (id: number) => {
-    return await knex<User>('usuarios').where({ id }).returning('*').first()
+
+  getUser: async (id: number): Promise<OmittedUserPass> => {
+
+    const user = await knex<User>('users')
+      .where({ id })
+      .returning(['id', 'full_name', 'email'])
+      .first()
+
+    return user!
   },
 
   updateUser: async (
     id: number,
     data: OmittedUserId
   ): Promise<Object | OmittedUserPass> => {
-    if (!data) {
-      return { message: 'Nenhum dado foi fornecido para atualização.' }
-    }
+    if (!data) return { message: 'Nenhum dado foi fornecido para atualização.' }
 
-    const user = await knex<User>('usuarios').where({ id }).first()
+    const user = await knex<User>('users').where({ id }).first()
 
-    if (!user) {
-      return { message: 'Usuário não encontrado.' }
-    }
+    if (!user) return { message: 'Usuário não encontrado.' }
 
-    if (user.nome) {
-      user.nome = data.nome
-    }
-    if (user.email) {
-      user.email = data.email
-    }
-    if (user.senha) {
-      const senhaNova = await bcrypt.hash(data.senha, 10)
-      user.senha = senhaNova
-    }
+    user.full_name = data.full_name
+    user.email = data.email
+    const newPass = await bcrypt.hash(data.pass, 10)
+    user.pass = newPass
 
-    await knex<User>('usuarios').where({ id }).update(user).returning('*')
-
-    const { senha: _, ...userData } = user
-
-    return userData
+    return await knex<User>('users')
+    .where({ id })
+    .update(user)
+    .returning(['id', 'full_name', 'email'])
   },
 
-  createUser: async (data: OmittedUserId): Promise<Object> => {
-    const senhaNova = await bcrypt.hash(data.senha, 10)
+  createUser: async (
+    data: OmittedUserId
+  ): Promise<OmittedUserPass | Object> => {
+    const newPass = await bcrypt.hash(data.pass, 10)
+    data.pass = newPass
 
-    data.senha = senhaNova
+    const createdUser = await knex<OmittedUserId>('users')
+      .insert(data)
+      .returning(['id', 'full_name', 'email'])
+      .first()
 
-    return await knex<OmittedUserId>('usuarios').insert(data).returning('*')
+    if (!createdUser) return { message: 'Conta excluído com sucesso.' }
+
+    return createdUser as OmittedUserPass
   },
 
   deleteUser: async (id: number): Promise<Object> => {
-    await knex<User>('usuarios').where({ id }).del()
-    
+    await knex<User>('users').where({ id }).del()
+
     return { message: 'Conta excluído com sucesso.' }
   },
 }
