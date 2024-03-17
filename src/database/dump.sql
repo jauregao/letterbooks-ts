@@ -16,6 +16,6 @@ CREATE TABLE books (
 
 CREATE TABLE read_books (
   id SERIAL PRIMARY KEY,
-  user INTEGER REFERENCES user(id),
-  isbn INTEGER REFERENCES books(isbn)
+  user_id INTEGER REFERENCES users(id),
+  book_isbn INTEGER REFERENCES books(isbn)
 );

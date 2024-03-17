@@ -12,10 +12,10 @@ export type Book = {
   review?: string
 }
 
-export type ReadBooks = {
+export type ReadBook = {
   id: number
-  user: number
-  isbn: number
+  user_id: number
+  book_isbn: number
 }
 
 export type OmittedUserId = Omit<User, 'id'>
