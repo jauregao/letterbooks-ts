@@ -11,7 +11,6 @@ export const getUserLogged = async (req: CustomRequest, res: Response): Promise<
   const { id } = usuario
 
   try {
-
     const loggedUser = await user.getUser(id)
 
     return res.json({
@@ -29,7 +28,6 @@ export const newUser = async ( req: Request, res: Response): Promise<User | Obje
   const newUserPayload: OmittedUserId = req.body
 
   try {
-
     return res.status(201).json(await user.createUser(newUserPayload))
 
   } catch (error) {
@@ -43,7 +41,6 @@ export const updateUser = async (req: CustomRequest, res: Response) => {
   const { id } = usuario
 
   try {
-
     return res.status(200).json(await user.updateUser(id, updateUserPayload))
 
   } catch (error) {
