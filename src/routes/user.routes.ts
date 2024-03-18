@@ -7,10 +7,11 @@ import {
 } from '../controllers/userControllers'
 import login from '../controllers/userLogin'
 import { verifyUserIsLogged } from '../middlewares/userAuth'
+import { verifyEmailExists } from '../middlewares/verifyEmailExists'
 
 const userRoutes = Router()
 
-userRoutes.post('/usuario', newUser)
+userRoutes.post('/usuario', verifyEmailExists ,newUser)
 
 userRoutes.post('/login', login)
 
