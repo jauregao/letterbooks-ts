@@ -3,8 +3,13 @@ import { knex } from '../connections/connections'
 import { Book } from '../types'
 
 export const books = {
-  getAll: async (): Promise<Book[]> => {
-    return (await knex<Book>('livros')) as Book[]
+  getAll: async (id: number): Promise<Book[]> => {
+
+    const subquery = knex('read_books')
+    .where({id})
+    .select('book_isbn');
+
+    return (await knex<Book>('livros').whereIn('isbn', subquery)) as Book[]
   },
 
   getOne: async (bookName: string): Promise<Book> => {

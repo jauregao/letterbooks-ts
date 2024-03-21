@@ -3,6 +3,7 @@ export type User = {
   full_name: string
   email: string
   pass: string
+
 }
 
 export type Book = {

@@ -9,7 +9,7 @@ export const verifyEmailExists= async ( req: Request, res: Response, next: NextF
   try {
     const userEmail = await knex<User>('users').where({email}).first()
 
-    if(userEmail) return {message: 'Email já cadastrado.'}
+    if(userEmail) return res.status(400).json({message: 'Email já cadastrado.'})
 
     next()
   } catch (error) {

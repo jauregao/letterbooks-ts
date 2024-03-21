@@ -17,7 +17,7 @@ userRoutes.post('/login', login)
 
 userRoutes.get('/usuario', verifyUserIsLogged, getUserLogged)
 
-userRoutes.put('/usuario', verifyUserIsLogged, updateUser)
+userRoutes.patch('/usuario', verifyUserIsLogged, updateUser)
 
 userRoutes.delete('/usuario', verifyUserIsLogged, deleteUser)
 

@@ -2,6 +2,8 @@ import { knex } from '../connections/connections'
 import { User, OmittedUserId, OmittedUserPass } from '../types'
 import bcrypt from 'bcrypt'
 
+const saltRounds =  process.env.SALT_ROUNDS!
+
 export const user = {
 
   getUser: async (id: number): Promise<OmittedUserPass> => {
@@ -24,10 +26,13 @@ export const user = {
 
     if (!user) return { message: 'Usuário não encontrado.' }
 
-    user.full_name = data.full_name
-    user.email = data.email
-    const newPass = await bcrypt.hash(data.pass, 10)
-    user.pass = newPass
+    if(user.full_name) user.full_name = data.full_name
+    if(user.email)  user.email = data.email
+
+    if(user.pass) {
+      const newPass = await bcrypt.hash(data.pass, saltRounds)
+      user.pass = newPass
+    }
 
     return await knex<User>('users')
     .where({ id })
@@ -38,7 +43,7 @@ export const user = {
   createUser: async (
     data: OmittedUserId
   ): Promise<OmittedUserPass | Object> => {
-    const newPass = await bcrypt.hash(data.pass, 10)
+    const newPass = await bcrypt.hash(data.pass, saltRounds)
     data.pass = newPass
 
     const createdUser = await knex<OmittedUserId>('users')

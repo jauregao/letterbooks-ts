@@ -1,11 +1,8 @@
 import { OmittedBookId } from './../types';
 import { Request, Response } from 'express'
-import { user } from '../models/userModel'
-import { User, ReadBook, Book } from '../types'
+import { User, Book } from '../types'
 import { books } from '../models/booksModel'
 import { readBook } from '../models/readBooksModel'
-import knex from 'knex'
-
 interface CustomRequest extends Request {
   usuario?: User
 }
@@ -42,14 +39,12 @@ export const updateBook = async (req: CustomRequest, res: Response) => {
   }
 }
 
-export const getBook = async (req: CustomRequest, res: Response) => {
+export const getBooks = async (req: CustomRequest, res: Response) => {
   const usuario = req.usuario!
   const { id } = usuario
-  
-  const bookData: Book = req.body
-
 
   try {
+    return await books.getAll(id)
     
   } catch (error) {
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })

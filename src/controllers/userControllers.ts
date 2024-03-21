@@ -36,7 +36,7 @@ export const newUser = async ( req: Request, res: Response): Promise<User | Obje
 }
 
 export const updateUser = async (req: CustomRequest, res: Response) => {
-  const updateUserPayload: OmittedUserId = req.body
+  const updateUserPayload = req.body
   const usuario = req.usuario!
   const { id } = usuario
 
@@ -44,6 +44,8 @@ export const updateUser = async (req: CustomRequest, res: Response) => {
     return res.status(200).json(await user.updateUser(id, updateUserPayload))
 
   } catch (error) {
+    console.log(error);
+    
     return res.status(500).json({ mensagem: 'Erro interno do servidor' })
   }
 }
